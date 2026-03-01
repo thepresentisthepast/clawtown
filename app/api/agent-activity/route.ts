@@ -206,10 +206,10 @@ async function parseSessionActivity(agentSessionsDir: string): Promise<ParsedSta
       result.mainAgent.status = 'working'
       result.mainAgent.activity = `调用${lastToolUse}`
     }
-    // Default: working in chat room
+    // Default: idle (free roaming)
     else {
-      result.mainAgent.status = 'working'
-      result.mainAgent.activity = '思考人生中...'
+      result.mainAgent.status = 'idle'
+      result.mainAgent.activity = '自由漫游中...'
     }
 
     // Add active subtasks
