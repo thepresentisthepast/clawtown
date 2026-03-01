@@ -151,20 +151,8 @@ export function updateCharacter(
   tileMap: TileTypeVal[][],
   blockedTiles: Set<string>,
   interactionPoints: InteractionPoint[],
-  characters: Map<number, Character>,
 ): void {
   ch.frameTimer += dt
-
-  // Handle collision timer
-  if (ch.collisionTimer > 0) {
-    ch.collisionTimer -= dt
-    if (ch.collisionTimer <= 0) {
-      ch.collisionTarget = null
-      ch.collisionText = ''
-    }
-    // Stay idle during collision
-    return
-  }
 
   // Pet-specific update: always wander, never sit
   if (ch.isCat || ch.isLobster) {
@@ -196,9 +184,6 @@ export function updateCharacter(
     }
 
     case CharacterState.IDLE: {
-      // Check collision with cat/lobster
-      checkCollision(ch, characters)
-      
       // No idle animation — static pose
       ch.frame = 0
       if (ch.seatTimer < 0) ch.seatTimer = 0 // clear turn-end sentinel
@@ -244,7 +229,6 @@ export function updateCharacter(
               ch.state = CharacterState.WALK
               ch.frame = 0
               ch.frameTimer = 0
-              ch.wanderTimer = randomRange(WANDER_PAUSE_MIN_SEC, WANDER_PAUSE_MAX_SEC)
               break
             }
           }
@@ -330,11 +314,7 @@ export function updateCharacter(
             ch.frameTimer = 0
             break
           }
-          // Clear stale target and continue wandering
-          if (ch.interactionTarget) {
-            ch.interactionTarget = null
-            ch.wanderTimer = 0.1 // Trigger immediate wander
-          }
+          ch.interactionTarget = null // clear stale target
           // Check if arrived at assigned seat — sit down for a rest before wandering again
           if (ch.seatId) {
             const seat = seats.get(ch.seatId)

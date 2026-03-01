@@ -469,7 +469,7 @@ export class OfficeState {
   private updateHunterLobster(ch: Character, dt: number, idleTarget: Character | null): void {
     if (!idleTarget) {
       this.withOwnSeatUnblocked(ch, () =>
-        updateCharacter(ch, dt, this.walkableTiles, this.seats, this.tileMap, this.blockedTiles, this.interactionPoints, this.characters)
+        updateCharacter(ch, dt, this.walkableTiles, this.seats, this.tileMap, this.blockedTiles, this.interactionPoints)
       )
       return
     }
@@ -490,7 +490,7 @@ export class OfficeState {
       this.faceToward(ch, idleTarget)
       ch.wanderTimer = 60
       this.withOwnSeatUnblocked(ch, () =>
-        updateCharacter(ch, dt, this.walkableTiles, this.seats, this.tileMap, this.blockedTiles, this.interactionPoints, this.characters)
+        updateCharacter(ch, dt, this.walkableTiles, this.seats, this.tileMap, this.blockedTiles, this.interactionPoints)
       )
       return
     }
@@ -523,7 +523,7 @@ export class OfficeState {
     // Keep timer high so cat/lobster FSM won't pick a random wander target while tracking.
     ch.wanderTimer = 60
     this.withOwnSeatUnblocked(ch, () =>
-      updateCharacter(ch, dt, this.walkableTiles, this.seats, this.tileMap, this.blockedTiles, this.interactionPoints, this.characters)
+      updateCharacter(ch, dt, this.walkableTiles, this.seats, this.tileMap, this.blockedTiles, this.interactionPoints)
     )
 
     // Clamp after movement so it never catches the idle humanoid.
@@ -935,7 +935,7 @@ export class OfficeState {
 
       // Temporarily unblock own seat so character can pathfind to it
       this.withOwnSeatUnblocked(ch, () =>
-        updateCharacter(ch, dt, this.walkableTiles, this.seats, this.tileMap, this.blockedTiles, this.interactionPoints, this.characters)
+        updateCharacter(ch, dt, this.walkableTiles, this.seats, this.tileMap, this.blockedTiles, this.interactionPoints)
       )
 
       if (ch.isLobster) {
