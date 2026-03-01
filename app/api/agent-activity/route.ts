@@ -141,19 +141,17 @@ async function parseSessionActivity(agentSessionsDir: string): Promise<ParsedSta
 
 export async function GET() {
   const openclawDir = path.join(os.homedir(), '.openclaw')
-  const configPath = path.join(openclawDir, 'openclaw.json')
   const agentsDir = path.join(openclawDir, 'agents')
 
   const agents: AgentActivity[] = []
 
   try {
-    if (existsSync(configPath)) {
-      const configContent = await fs.readFile(configPath, 'utf8')
-      const config = JSON.parse(configContent)
-
-      const agentList = Array.isArray(config.agents) ? config.agents : config.agents?.list
-      if (agentList && Array.isArray(agentList)) {
-        for (const agent of agentList) {
+    // Fetch from /api/config instead
+    const configRes = await fetch('http://localhost:3001/api/config')
+    const config = await configRes.json()
+    
+    if (config.agents && Array.isArray(config.agents)) {
+      for (const agent of config.agents) {
           let agentSessionsDir = ''
           let parsedState: ParsedState | null = null
 
@@ -198,7 +196,6 @@ export async function GET() {
               })
             }
           }
-        }
       }
     }
   } catch (error) {
