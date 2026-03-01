@@ -330,7 +330,11 @@ export function updateCharacter(
             ch.frameTimer = 0
             break
           }
-          ch.interactionTarget = null // clear stale target
+          // Clear stale target and continue wandering
+          if (ch.interactionTarget) {
+            ch.interactionTarget = null
+            ch.wanderTimer = 0.1 // Trigger immediate wander
+          }
           // Check if arrived at assigned seat — sit down for a rest before wandering again
           if (ch.seatId) {
             const seat = seats.get(ch.seatId)
