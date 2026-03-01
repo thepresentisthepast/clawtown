@@ -191,6 +191,7 @@ function SessionDetailPanel({ agentId, sessionId, sessionType, userName, agentNa
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedMessages, setExpandedMessages] = useState<Set<number>>(new Set());
+  const { t } = useI18n();
 
   const fetchDetail = useCallback(() => {
     setLoading(true);
@@ -237,9 +238,19 @@ function SessionDetailPanel({ agentId, sessionId, sessionType, userName, agentNa
       <div className="p-4 border-b border-[var(--border)]">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-[var(--text)]">会话详情</h3>
-          <button onClick={onClose} className="text-xs text-[var(--text-muted)] hover:text-[var(--text)] px-2 py-1 rounded hover:bg-[var(--card)]">
-            收起 ▲
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={fetchDetail}
+              disabled={loading}
+              className="text-xs text-[var(--text-muted)] hover:text-[var(--text)] px-2 py-1 rounded hover:bg-[var(--card)] disabled:opacity-50"
+              title={t("sessions.refreshMessages")}
+            >
+              {loading ? `🔄 ${t("sessions.refreshing")}` : "🔄 刷新"}
+            </button>
+            <button onClick={onClose} className="text-xs text-[var(--text-muted)] hover:text-[var(--text)] px-2 py-1 rounded hover:bg-[var(--card)]">
+              ✕ {t("sessions.close")}
+            </button>
+          </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
           <div className="bg-[var(--card)] rounded-lg p-2.5 border border-[var(--border)]">
@@ -424,9 +435,19 @@ function SessionList({ agentId }: { agentId: string }) {
             {filtered.length} {t("sessions.sessionCount")} · {t("sessions.totalToken")}: {(totalTokens / 1000).toFixed(1)}k
           </p>
         </div>
-        <Link href="/sessions" className="px-4 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-sm hover:border-[var(--accent)] transition">
-          {t("sessions.backToAgents")}
-        </Link>
+        <div className="flex gap-2">
+          <button
+            onClick={fetchSessions}
+            disabled={loading}
+            className="px-4 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-sm hover:border-[var(--accent)] transition disabled:opacity-50"
+            title={t("sessions.refreshList")}
+          >
+            {loading ? `🔄 ${t("sessions.refreshing")}` : `🔄 ${t("sessions.refresh")}`}
+          </button>
+          <Link href="/sessions" className="px-4 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-sm hover:border-[var(--accent)] transition">
+            {t("sessions.backToAgents")}
+          </Link>
+        </div>
       </div>
 
       {/* Type filter */}

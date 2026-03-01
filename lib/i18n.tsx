@@ -84,6 +84,11 @@ const translations: Record<Locale, Record<string, string>> = {
     "sessions.context": "上下文",
     "sessions.selectAgent": "选择一个 Agent 查看其会话列表",
     "sessions.backToAgents": "← 返回 Agent 列表",
+    "sessions.refresh": "刷新",
+    "sessions.refreshing": "刷新中...",
+    "sessions.refreshList": "刷新会话列表",
+    "sessions.refreshMessages": "刷新消息列表",
+    "sessions.close": "关闭",
 
     // gateway status
     "gateway.healthy": "Gateway 运行正常",
@@ -192,6 +197,11 @@ const translations: Record<Locale, Record<string, string>> = {
     "sessions.context": "Context",
     "sessions.selectAgent": "Select an agent to view its sessions",
     "sessions.backToAgents": "← Back to agents",
+    "sessions.refresh": "Refresh",
+    "sessions.refreshing": "Refreshing...",
+    "sessions.refreshList": "Refresh session list",
+    "sessions.refreshMessages": "Refresh messages",
+    "sessions.close": "Close",
 
     // gateway status
     "gateway.healthy": "Gateway is running",
