@@ -37,8 +37,9 @@ export async function GET(
   const { agentId } = await params;
 
   try {
-    // 调用 openclaw cron list --json
-    const { stdout } = await execAsync("openclaw cron list --json", {
+    // 调用 openclaw cron list --json（使用完整路径）
+    const openclawPath = process.env.OPENCLAW_BIN || "/root/.nvm/versions/node/v22.22.0/bin/openclaw";
+    const { stdout } = await execAsync(`${openclawPath} cron list --json`, {
       cwd: OPENCLAW_HOME,
     });
 

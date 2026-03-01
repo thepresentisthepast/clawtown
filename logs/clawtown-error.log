@@ -9,3 +9,104 @@ You are using Node.js 18.20.8. For Next.js, Node.js version ">=20.9.0" is requir
 You are using Node.js 18.20.8. For Next.js, Node.js version ">=20.9.0" is required.
 You are using Node.js 18.20.8. For Next.js, Node.js version ">=20.9.0" is required.
 You are using Node.js 18.20.8. For Next.js, Node.js version ">=20.9.0" is required.
+Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at ignore-listed frames
+Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
+/bin/sh: line 1: openclaw: command not found
+
+    at ignore-listed frames {
+  code: 127,
+  killed: false,
+  signal: null,
+  cmd: 'openclaw cron list --json',
+  stdout: '',
+  stderr: '/bin/sh: line 1: openclaw: command not found\n'
+}
+Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
+/bin/sh: line 1: openclaw: command not found
+
+    at ignore-listed frames {
+  code: 127,
+  killed: false,
+  signal: null,
+  cmd: 'openclaw cron list --json',
+  stdout: '',
+  stderr: '/bin/sh: line 1: openclaw: command not found\n'
+}
+Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
+/bin/sh: line 1: openclaw: command not found
+
+    at ignore-listed frames {
+  code: 127,
+  killed: false,
+  signal: null,
+  cmd: 'openclaw cron list --json',
+  stdout: '',
+  stderr: '/bin/sh: line 1: openclaw: command not found\n'
+}
+Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
+/bin/sh: line 1: openclaw: command not found
+
+    at ignore-listed frames {
+  code: 127,
+  killed: false,
+  signal: null,
+  cmd: 'openclaw cron list --json',
+  stdout: '',
+  stderr: '/bin/sh: line 1: openclaw: command not found\n'
+}
+Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
+/bin/sh: line 1: openclaw: command not found
+
+    at ignore-listed frames {
+  code: 127,
+  killed: false,
+  signal: null,
+  cmd: 'openclaw cron list --json',
+  stdout: '',
+  stderr: '/bin/sh: line 1: openclaw: command not found\n'
+}
+Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
+/bin/sh: line 1: openclaw: command not found
+
+    at ignore-listed frames {
+  code: 127,
+  killed: false,
+  signal: null,
+  cmd: 'openclaw cron list --json',
+  stdout: '',
+  stderr: '/bin/sh: line 1: openclaw: command not found\n'
+}
+Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
+/bin/sh: line 1: openclaw: command not found
+
+    at ignore-listed frames {
+  code: 127,
+  killed: false,
+  signal: null,
+  cmd: 'openclaw cron list --json',
+  stdout: '',
+  stderr: '/bin/sh: line 1: openclaw: command not found\n'
+}
+Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
+/bin/sh: line 1: openclaw: command not found
+
+    at ignore-listed frames {
+  code: 127,
+  killed: false,
+  signal: null,
+  cmd: 'openclaw cron list --json',
+  stdout: '',
+  stderr: '/bin/sh: line 1: openclaw: command not found\n'
+}
+Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
+/bin/sh: line 1: openclaw: command not found
+
+    at ignore-listed frames {
+  code: 127,
+  killed: false,
+  signal: null,
+  cmd: 'openclaw cron list --json',
+  stdout: '',
+  stderr: '/bin/sh: line 1: openclaw: command not found\n'
+}
