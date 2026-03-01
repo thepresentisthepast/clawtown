@@ -132,6 +132,14 @@ const translations: Record<Locale, Record<string, string>> = {
     "cronJobs.statusOk": "正常",
     "cronJobs.statusError": "错误",
     "cronJobs.statusIdle": "空闲",
+    "cronJobs.delete": "删除",
+    "cronJobs.deleteConfirm": "确认删除",
+    "cronJobs.deleteWarning": "危险操作",
+    "cronJobs.deleteMessage": "确定要删除定时任务",
+    "cronJobs.deleteAction1": "从 cron/jobs.json 中删除该任务",
+    "cronJobs.deleteAction2": "清理核心文件中的相关引用（HEARTBEAT.md、AGENTS.md等）",
+    "cronJobs.deleteAction3": "此操作不可撤销",
+    "common.cancel": "取消",
   },
   en: {
     // layout
@@ -260,6 +268,14 @@ const translations: Record<Locale, Record<string, string>> = {
     "cronJobs.statusOk": "OK",
     "cronJobs.statusError": "Error",
     "cronJobs.statusIdle": "Idle",
+    "cronJobs.delete": "Delete",
+    "cronJobs.deleteConfirm": "Confirm Delete",
+    "cronJobs.deleteWarning": "Dangerous Operation",
+    "cronJobs.deleteMessage": "Are you sure you want to delete the cron job",
+    "cronJobs.deleteAction1": "Remove the task from cron/jobs.json",
+    "cronJobs.deleteAction2": "Clean up references in core files (HEARTBEAT.md, AGENTS.md, etc.)",
+    "cronJobs.deleteAction3": "This operation cannot be undone",
+    "common.cancel": "Cancel",
   },
 };
 

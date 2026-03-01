@@ -135,6 +135,7 @@ export default function CronJobsPage() {
   const [loading, setLoading] = useState(true);
   const [loadingJobs, setLoadingJobs] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
     fetchWithRetry("/api/config")
@@ -167,6 +168,33 @@ export default function CronJobsPage() {
       setCronJobs([]);
     } finally {
       setLoadingJobs(false);
+    }
+  };
+
+  const handleDelete = (jobId: string, jobName: string) => {
+    setDeleteTarget({ id: jobId, name: jobName });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget || !selectedAgent) return;
+
+    try {
+      const res = await fetch(`/api/cron-jobs/${selectedAgent}/${deleteTarget.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "删除失败");
+      }
+
+      // 刷新任务列表
+      const res2 = await fetchWithRetry(`/api/cron-jobs/${selectedAgent}`);
+      const data: AgentCronJobs = await res2.json();
+      setCronJobs(data.jobs || []);
+      setDeleteTarget(null);
+    } catch (err: any) {
+      alert("删除失败：" + err.message);
     }
   };
 
@@ -277,15 +305,56 @@ export default function CronJobsPage() {
 
                     {/* 描述 */}
                     {truncatedDesc && (
-                      <div className="text-sm text-[var(--text-muted)] mt-auto">
+                      <div className="text-sm text-[var(--text-muted)] mb-3">
                         {truncatedDesc}
                       </div>
                     )}
+
+                    {/* 删除按钮 */}
+                    <div className="mt-auto pt-2 border-t border-[var(--border)]">
+                      <button
+                        onClick={() => handleDelete(job.id, job.name)}
+                        className="w-full px-3 py-2 rounded-lg bg-red-500/10 text-red-400 text-sm hover:bg-red-500/20 transition flex items-center justify-center gap-2"
+                      >
+                        🗑️ {t("cronJobs.delete")}
+                      </button>
+                    </div>
                   </div>
                 );
               })}
             </div>
           )}
+        </div>
+      )}
+
+      {/* 删除确认对话框 */}
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl p-6 max-w-md mx-4">
+            <h3 className="text-lg font-bold text-red-400 mb-2">⚠️ {t("cronJobs.deleteWarning")}</h3>
+            <p className="text-sm text-[var(--text-muted)] mb-4">
+              {t("cronJobs.deleteMessage")} <strong className="text-[var(--text)]">{deleteTarget.name}</strong>？
+            </p>
+            <ul className="text-xs text-[var(--text-muted)] mb-4 space-y-1">
+              <li>• {t("cronJobs.deleteAction1")}</li>
+              <li>• {t("cronJobs.deleteAction2")}</li>
+              <li>• {t("cronJobs.deleteAction3")}</li>
+            </ul>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="flex-1 px-4 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-sm hover:border-[var(--accent)] transition"
+              >
+                {t("common.cancel")}
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="flex-1 px-4 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 transition"
+              >
+                {t("cronJobs.deleteConfirm")}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
