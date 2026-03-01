@@ -16,6 +16,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "nav.sessions": "会话历史",
     "nav.tools": "工具列表",
     "nav.skills": "技能列表",
+    "nav.cronJobs": "定时任务",
     "nav.pixelOffice": "像素办公室",
 
     // common
@@ -117,6 +118,20 @@ const translations: Record<Locale, Record<string, string>> = {
     "pixelOffice.idleRank.online": "在线",
     "pixelOffice.idleRank.active": "活跃",
     "pixelOffice.idleRank.idle": "摸鱼",
+
+    // cron jobs page
+    "cronJobs.title": "定时任务",
+    "cronJobs.selectAgent": "选择Agent查看定时任务",
+    "cronJobs.jobsOf": "的定时任务",
+    "cronJobs.status": "状态",
+    "cronJobs.nextRun": "下次运行",
+    "cronJobs.lastRun": "上次运行",
+    "cronJobs.schedule": "调度",
+    "cronJobs.enabled": "启用",
+    "cronJobs.disabled": "禁用",
+    "cronJobs.statusOk": "正常",
+    "cronJobs.statusError": "错误",
+    "cronJobs.statusIdle": "空闲",
   },
   en: {
     // layout
@@ -129,6 +144,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "nav.sessions": "Sessions",
     "nav.tools": "Tools",
     "nav.skills": "Skills",
+    "nav.cronJobs": "Cron Jobs",
     "nav.pixelOffice": "Pixel Office",
 
     // common
@@ -230,6 +246,20 @@ const translations: Record<Locale, Record<string, string>> = {
     "pixelOffice.idleRank.online": "Online",
     "pixelOffice.idleRank.active": "Active",
     "pixelOffice.idleRank.idle": "Slacking",
+
+    // cron jobs page
+    "cronJobs.title": "Cron Jobs",
+    "cronJobs.selectAgent": "Select an agent to view cron jobs",
+    "cronJobs.jobsOf": "'s Cron Jobs",
+    "cronJobs.status": "Status",
+    "cronJobs.nextRun": "Next Run",
+    "cronJobs.lastRun": "Last Run",
+    "cronJobs.schedule": "Schedule",
+    "cronJobs.enabled": "Enabled",
+    "cronJobs.disabled": "Disabled",
+    "cronJobs.statusOk": "OK",
+    "cronJobs.statusError": "Error",
+    "cronJobs.statusIdle": "Idle",
   },
 };
 
