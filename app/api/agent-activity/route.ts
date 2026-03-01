@@ -95,15 +95,21 @@ async function parseSessionActivity(agentSessionsDir: string): Promise<ParsedSta
             if (block.type === 'tool_use') {
               const toolName = block.name || 'exec'
               
+              // Skills: sessions_spawn, or anything with subtask description
+              const isSkill = toolName === 'sessions_spawn' || 
+                             (block.input?.task && typeof block.input.task === 'string')
+              
               if (block.input?.description) {
                 const desc = block.input.description as string
                 // Check if it's a subtask (skill execution)
-                if (desc.startsWith('Subtask:') || desc.includes('subtask')) {
+                if (desc.startsWith('Subtask:') || desc.includes('subtask') || isSkill) {
                   activeSubtasks.set(block.id, desc)
-                  lastSkillUse = `执行技能: ${desc.split(':')[1]?.trim() || 'unknown'}`
+                  lastSkillUse = `执行技能`
                 } else {
                   lastToolUse = `${toolName}`
                 }
+              } else if (isSkill) {
+                lastSkillUse = `执行技能`
               } else {
                 lastToolUse = `${toolName}`
               }
