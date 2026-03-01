@@ -254,6 +254,26 @@ function readIdentityName(agentId: string, agentDir?: string, workspace?: string
   return null;
 }
 
+// 从 USER.md 读取用户名字
+function readUserName(): string | null {
+  const candidates = [
+    path.join(OPENCLAW_DIR, "workspace/USER.md"),
+    path.join(OPENCLAW_DIR, "USER.md"),
+  ];
+
+  for (const p of candidates) {
+    try {
+      const content = fs.readFileSync(p, "utf-8");
+      const match = content.match(/\*\*Name:\*\*\s*(.+)/);
+      if (match) {
+        const name = match[1].trim();
+        if (name) return name;
+      }
+    } catch {}
+  }
+  return null;
+}
+
 export async function GET() {
   // 命中缓存直接返回
   if (configCache && Date.now() - configCache.ts < CACHE_TTL_MS) {
@@ -538,12 +558,15 @@ export async function GET() {
       }
     }
 
+    const userName = readUserName();
+
     const data = {
       agents: agentsWithStatus,
       providers,
       defaults: { model: defaultModel, fallbacks },
       gateway: { port: config.gateway?.port || 18789, token: config.gateway?.auth?.token || "" },
       groupChats,
+      userName,
     };
     configCache = { data, ts: Date.now() };
     return NextResponse.json(data);

@@ -44,6 +44,12 @@ interface AgentInfo {
   };
 }
 
+interface ConfigData {
+  agents: AgentInfo[];
+  userName: string | null;
+  error?: string;
+}
+
 interface Session {
   key: string;
   type: string;
@@ -180,7 +186,7 @@ function AgentPicker() {
 }
 
 /* ── Session Detail Panel ── */
-function SessionDetailPanel({ agentId, sessionId, sessionType, onClose }: { agentId: string; sessionId: string; sessionType?: string; onClose: () => void }) {
+function SessionDetailPanel({ agentId, sessionId, sessionType, userName, agentName, onClose }: { agentId: string; sessionId: string; sessionType?: string; userName: string; agentName: string; onClose: () => void }) {
   const [detail, setDetail] = useState<SessionDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -256,15 +262,21 @@ function SessionDetailPanel({ agentId, sessionId, sessionType, onClose }: { agen
               const firstUserMsgIndex = detail.messages.findIndex(m => m.role === "user");
               return detail.messages.map((msg, i) => {
                 const isFirstUserMsg = sessionType === "subagent" && i === firstUserMsgIndex;
+                // Check if this is an announce message (subagent task announcement)
+                const isAnnounceMsg = (msgText: string) => {
+                  // Match patterns like "[Sun 2026-03-01 05:33 UTC]" or "## 任务："
+                  return (msgText.startsWith("[") && msgText.includes("UTC]")) || msgText.includes("## 任务：");
+                };
                 const getSubagentUserLabel = (msgText: string) => {
+                  if (isAnnounceMsg(msgText)) return "⚙️ 系统";
                   if (isFirstUserMsg) return "📋 任务";
                   if (msgText.includes("Stats: runtime") || msgText.includes("Findings:")) return "🤖 子代理";
-                  return "👤 用户";
+                  return `👤 ${userName}`;
                 };
                 const label = msg.role === "user"
-                  ? (sessionType === "subagent" ? getSubagentUserLabel(msg.text) : "👤 用户")
+                  ? (sessionType === "subagent" ? getSubagentUserLabel(msg.text) : `👤 ${userName}`)
                   : msg.role === "assistant"
-                    ? (sessionType === "subagent" ? "🤖 子代理" : "🤖 助手")
+                    ? (sessionType === "subagent" ? "🤖 子代理" : `🤖 ${agentName}`)
                     : "⚙️ 系统";
                 return (
               <div key={i} className={`rounded-lg p-3 text-xs ${
@@ -310,6 +322,8 @@ function SessionList({ agentId }: { agentId: string }) {
   const [expandedSession, setExpandedSession] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>("all");
   const [compacting, setCompacting] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>("用户");
+  const [agentName, setAgentName] = useState<string>("助手");
   const { t } = useI18n();
   const formatTimeAgo = useTimeAgo();
 
@@ -320,6 +334,20 @@ function SessionList({ agentId }: { agentId: string }) {
     return { ...info, label };
   }
 
+  // Fetch config for userName and agentName
+  const fetchConfig = useCallback(() => {
+    fetchWithRetry("/api/config")
+      .then((r) => r.json())
+      .then((data: ConfigData) => {
+        if (!data.error) {
+          if (data.userName) setUserName(data.userName);
+          const agent = data.agents?.find((a) => a.id === agentId);
+          if (agent) setAgentName(agent.name);
+        }
+      })
+      .catch(() => {});
+  }, [agentId]);
+
   const fetchSessions = useCallback(() => {
     setLoading(true);
     setError(null);
@@ -327,13 +355,17 @@ function SessionList({ agentId }: { agentId: string }) {
       .then((r) => r.json())
       .then((data) => {
         if (data.error) setError(data.error);
-        else setSessions(data.sessions || []);
+        else {
+          // Filter out cron :run: keys to avoid duplicate cards
+          const filtered = (data.sessions || []).filter((s: Session) => !s.key.includes(":run:"));
+          setSessions(filtered);
+        }
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, [agentId]);
 
-  useEffect(() => { fetchSessions(); }, [fetchSessions]);
+  useEffect(() => { fetchSessions(); fetchConfig(); }, [fetchSessions, fetchConfig]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><p className="text-[var(--text-muted)]">{t("common.loading")}</p></div>;
   if (error) return (
@@ -487,6 +519,8 @@ function SessionList({ agentId }: { agentId: string }) {
                   agentId={agentId}
                   sessionId={s.sessionId}
                   sessionType={s.type}
+                  userName={userName}
+                  agentName={agentName}
                   onClose={() => setExpandedSession(null)}
                 />
               )}
