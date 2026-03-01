@@ -244,6 +244,7 @@ export function updateCharacter(
               ch.state = CharacterState.WALK
               ch.frame = 0
               ch.frameTimer = 0
+              ch.wanderTimer = randomRange(WANDER_PAUSE_MIN_SEC, WANDER_PAUSE_MAX_SEC)
               break
             }
           }

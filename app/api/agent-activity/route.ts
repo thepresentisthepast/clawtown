@@ -40,6 +40,20 @@ interface ParsedState {
   subagents: SubagentInfo[]
 }
 
+/** Extract subagent ID from session filename */
+function extractSubagentId(filename: string): string {
+  // Format: subagent-{id}.jsonl or subagent-{id}-{timestamp}.jsonl
+  const match = filename.match(/^subagent-(.+?)(?:-\d+)?\.jsonl$/)
+  return match ? match[1] : filename.replace('.jsonl', '')
+}
+
+/** Extract subagent label from session filename */
+function extractSubagentLabel(filename: string): string {
+  const id = extractSubagentId(filename)
+  // Convert ID to readable label (e.g., "code-review" -> "Code Review")
+  return id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+
 /** Parse the last N lines of the most recent session file for activity patterns */
 async function parseSessionActivity(agentSessionsDir: string): Promise<ParsedState> {
   const result: ParsedState = {
@@ -62,6 +76,18 @@ async function parseSessionActivity(agentSessionsDir: string): Promise<ParsedSta
       if (!file.endsWith('.jsonl')) continue
       const filePath = path.join(agentSessionsDir, file)
       const stat = await fs.stat(filePath)
+
+      // Check for subagent session files (filename contains 'subagent:')
+      if (file.includes('subagent:') || file.startsWith('subagent-')) {
+        const timeDiff = Date.now() - stat.mtimeMs
+        if (timeDiff < 5 * 60 * 1000) { // 5 minutes内有更新
+          result.subagents.push({
+            toolId: extractSubagentId(file),
+            label: extractSubagentLabel(file),
+          })
+        }
+      }
+
       if (stat.mtimeMs > latestTime) {
         latestTime = stat.mtimeMs
         latestFile = filePath
