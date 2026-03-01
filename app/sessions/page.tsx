@@ -353,6 +353,11 @@ function SessionList({ agentId }: { agentId: string }) {
                           {" "}({(s.totalTokens / s.contextTokens * 100).toFixed(1)}%)
                         </span>
                         {s.totalTokens / s.contextTokens > 0.5 && s.sessionId && (
+                          (s.type === "subagent" || s.type === "cron") && s.totalTokens / s.contextTokens > 0.95 ? (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium border bg-gray-500/20 text-gray-400 border-gray-500/30">
+                              📦 已归档
+                            </span>
+                          ) : (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -381,6 +386,7 @@ function SessionList({ agentId }: { agentId: string }) {
                           >
                             {compacting === s.sessionId ? "⏳ 已触发" : "🧹 压缩"}
                           </button>
+                          )
                         )}
                       </div>
                     </div>

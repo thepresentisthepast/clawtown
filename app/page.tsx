@@ -14,7 +14,6 @@ interface Agent {
   name: string;
   emoji: string;
   model: string;
-  activeModel?: string | null;
   platforms: Platform[];
   session?: {
     lastActive: number | null;
@@ -146,7 +145,7 @@ function AgentCard({ agent, t }: { agent: Agent; t: TFunc }) {
       <div className="space-y-1">
         <div>
           <span className="text-xs text-[var(--text-muted)] block">{t("agent.model")}</span>
-          <ModelBadge model={agent.activeModel || agent.model} />
+          <ModelBadge model={agent.model} />
         </div>
 
         <div>
