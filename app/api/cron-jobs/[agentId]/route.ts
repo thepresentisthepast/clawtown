@@ -52,10 +52,22 @@ export async function GET(
     const allJobs = data.jobs || [];
 
     // 过滤出属于该 agent 的任务
-    // sessionTarget 格式可能为 "isolated:<agentId>" 或直接是 agentId
-    const jobs = allJobs.filter((job: CronJob) => {
-      if (!job.sessionTarget) return false;
-      return job.sessionTarget.includes(agentId) || job.sessionTarget === agentId;
+    // 1. 检查 agentId 字段（如果存在）
+    // 2. 检查 sessionTarget 字段（可能为 "main" 或 "isolated"）
+    // 3. 如果 agentId 是 "main"，显示所有 sessionTarget 为 "main" 或 "isolated" 的任务
+    const jobs = allJobs.filter((job: any) => {
+      // 如果有 agentId 字段，直接匹配
+      if (job.agentId) {
+        return job.agentId === agentId;
+      }
+      
+      // 如果是 main agent，显示所有任务
+      if (agentId === "main") {
+        return true;
+      }
+      
+      // 其他 agent 只显示明确指定的任务
+      return job.sessionTarget && job.sessionTarget.includes(agentId);
     });
 
     // 获取 agent 名称
