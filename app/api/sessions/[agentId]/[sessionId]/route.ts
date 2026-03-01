@@ -83,8 +83,8 @@ export async function GET(
       }
     }
 
-    // Return last 50 messages to keep response size reasonable
-    const recentMessages = messages.slice(-50);
+    // Return last 50 messages in reverse chronological order (newest first)
+    const recentMessages = messages.slice(-50).reverse();
 
     return NextResponse.json({
       meta: sessionMeta,

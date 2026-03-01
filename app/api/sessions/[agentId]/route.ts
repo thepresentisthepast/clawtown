@@ -44,6 +44,9 @@ export async function GET(_req: Request, { params }: { params: Promise<{ agentId
       } else if (key.includes(":cron:")) {
         type = "cron";
         target = key.split(":cron:")[1];
+      } else if (key.includes(":subagent:")) {
+        type = "subagent";
+        target = key.split(":subagent:")[1];
       }
 
       return {
