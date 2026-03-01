@@ -302,9 +302,8 @@ export default function PixelOfficePage() {
     }
   }, [hoveredAgentId, editorTick, officeReady])
 
-  // Load GitHub contribution heatmap data (real → fallback mock)
+  // GitHub contribution heatmap data (mock only — API removed)
   useEffect(() => {
-    // 先设置 mock 保证立即有内容
     const mockWeeks = Array.from({ length: 52 }, () => ({
       days: Array.from({ length: 7 }, () => ({
         count: Math.random() < 0.25 ? 0 : Math.floor(Math.random() * 12),
@@ -312,16 +311,6 @@ export default function PixelOfficePage() {
       })),
     }))
     contributionsRef.current = { weeks: mockWeeks, username: 'mock' }
-
-    // 异步拉取真实数据
-    fetch('/api/pixel-office/contributions')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => {
-        if (data && data.weeks) {
-          contributionsRef.current = data
-        }
-      })
-      .catch(() => {})
   }, [])
 
   // Load photograph for right room wall
@@ -331,28 +320,19 @@ export default function PixelOfficePage() {
     img.onload = () => { photographRef.current = img }
   }, [])
 
-  // Preload activity heatmap data
+  // Activity heatmap data (API removed — use empty)
   useEffect(() => {
-    fetch('/api/activity-heatmap')
-      .then(r => r.json())
-      .then(data => { if (data.agents) activityHeatmapRef.current = data.agents })
-      .catch(() => {})
+    activityHeatmapRef.current = null
   }, [])
 
-  // Preload version info
+  // Version info (API removed — skip)
   useEffect(() => {
-    fetch('/api/pixel-office/version')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data && data.tag) versionInfoRef.current = data })
-      .catch(() => {})
+    versionInfoRef.current = null
   }, [])
 
-  // Preload idle rank data
+  // Idle rank data (API removed — skip)
   useEffect(() => {
-    fetch('/api/pixel-office/idle-rank')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data && data.agents) idleRankRef.current = data.agents })
-      .catch(() => {})
+    idleRankRef.current = null
   }, [])
 
   // Poll for agent activity + sound notification
@@ -688,12 +668,6 @@ export default function PixelOfficePage() {
         })) {
           // Click on clock — show activity heatmap
           setShowActivityHeatmap(true)
-          if (!activityHeatmapRef.current) {
-            fetch('/api/activity-heatmap')
-              .then(r => r.json())
-              .then(data => { if (data.agents) activityHeatmapRef.current = data.agents })
-              .catch(() => {})
-          }
         } else if (office.layout.furniture.some(f => {
           if (f.type !== 'phone') return false
           const entry = getCatalogEntry(f.type)

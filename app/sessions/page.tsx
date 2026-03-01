@@ -41,9 +41,12 @@ const TYPE_EMOJI_COLOR: Record<string, { emoji: string; color: string }> = {
   "feishu-group": { emoji: "👥", color: "bg-blue-500/20 text-blue-300 border-blue-500/30" },
   "discord-dm": { emoji: "🎮", color: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
   "discord-channel": { emoji: "📢", color: "bg-purple-500/20 text-purple-300 border-purple-500/30" },
+  "telegram-dm": { emoji: "✈️", color: "bg-sky-500/20 text-sky-300 border-sky-500/30" },
+  "telegram-group": { emoji: "👥", color: "bg-sky-500/20 text-sky-300 border-sky-500/30" },
   "whatsapp-dm": { emoji: "💬", color: "bg-green-500/20 text-green-300 border-green-500/30" },
   "whatsapp-group": { emoji: "👥", color: "bg-green-500/20 text-green-300 border-green-500/30" },
   cron: { emoji: "⏰", color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" },
+  subagent: { emoji: "🤖", color: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30" },
   unknown: { emoji: "❓", color: "bg-gray-500/20 text-gray-300 border-gray-500/30" },
 };
 
@@ -162,8 +165,6 @@ function SessionList({ agentId }: { agentId: string }) {
   const [gateway, setGateway] = useState<GatewayInfo>({ port: 18789 });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [testResults, setTestResults] = useState<Record<string, { status: string; elapsed?: number; reply?: string; error?: string }>>({});
-  const [testingAll, setTestingAll] = useState(false);
   const { t } = useI18n();
 
   function formatTimeAgo(ts: number): string {
@@ -197,24 +198,7 @@ function SessionList({ agentId }: { agentId: string }) {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-
-    // 从 localStorage 恢复测试结果
-    const savedTestResults = localStorage.getItem('sessionTestResults');
-    if (savedTestResults) {
-      try {
-        setTestResults(JSON.parse(savedTestResults));
-      } catch (e) {
-        console.error('Failed to parse sessionTestResults from localStorage', e);
-      }
-    }
   }, [agentId]);
-
-  // 保存测试结果到 localStorage
-  useEffect(() => {
-    if (Object.keys(testResults).length > 0) {
-      localStorage.setItem('sessionTestResults', JSON.stringify(testResults));
-    }
-  }, [testResults]);
 
   if (loading) {
     return (
@@ -234,32 +218,6 @@ function SessionList({ agentId }: { agentId: string }) {
 
   const totalTokens = sessions.reduce((sum, s) => sum + s.totalTokens, 0);
 
-  async function testSession(sessionKey: string, e?: React.MouseEvent) {
-    e?.stopPropagation();
-    setTestResults((prev) => ({ ...prev, [sessionKey]: { status: "testing" } }));
-    try {
-      const res = await fetch("/api/test-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionKey, agentId, port: gateway.port, token: gateway.token }),
-      });
-      const data = await res.json();
-      setTestResults((prev) => ({ ...prev, [sessionKey]: data }));
-      return data;
-    } catch (err: any) {
-      const result = { status: "error", error: err.message };
-      setTestResults((prev) => ({ ...prev, [sessionKey]: result }));
-      return result;
-    }
-  }
-
-  async function testAllSessions() {
-    setTestingAll(true);
-    const promises = sessions.map((s) => testSession(s.key));
-    await Promise.all(promises);
-    setTestingAll(false);
-  }
-
   return (
     <main className="min-h-screen p-8 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-6">
@@ -269,21 +227,12 @@ function SessionList({ agentId }: { agentId: string }) {
             {sessions.length} {t("sessions.sessionCount")} · {t("sessions.totalToken")}: {(totalTokens / 1000).toFixed(1)}k
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={testAllSessions}
-            disabled={testingAll}
-            className="px-4 py-2 rounded-lg bg-[var(--accent)] text-white text-sm font-medium hover:opacity-90 transition disabled:opacity-50"
-          >
-            {testingAll ? t("sessions.testingAll") : t("sessions.testAll")}
-          </button>
-          <Link
-            href="/sessions"
-            className="px-4 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-sm hover:border-[var(--accent)] transition"
-          >
-            {t("sessions.backToAgents")}
-          </Link>
-        </div>
+        <Link
+          href="/sessions"
+          className="px-4 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-sm hover:border-[var(--accent)] transition"
+        >
+          {t("sessions.backToAgents")}
+        </Link>
       </div>
 
       <div className="space-y-3">
@@ -311,38 +260,8 @@ function SessionList({ agentId }: { agentId: string }) {
                     </code>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={(e) => testSession(s.key, e)}
-                    disabled={testResults[s.key]?.status === "testing"}
-                    className="px-3 py-1 rounded-lg text-xs font-medium border border-[var(--border)] bg-[var(--bg)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition disabled:opacity-50"
-                  >
-                    {testResults[s.key]?.status === "testing" ? t("sessions.testing") : t("sessions.test")}
-                  </button>
-                  <span className="text-xs text-[var(--text-muted)]">{formatTimeAgo(s.updatedAt)}</span>
-                </div>
+                <span className="text-xs text-[var(--text-muted)]">{formatTimeAgo(s.updatedAt)}</span>
               </div>
-              {/* Test result */}
-              {testResults[s.key] && testResults[s.key].status !== "testing" && (
-                <div className={`mb-2 px-3 py-2 rounded-lg text-xs ${
-                  testResults[s.key].status === "ok"
-                    ? "bg-green-500/10 border border-green-500/30 text-green-300"
-                    : "bg-red-500/10 border border-red-500/30 text-red-300"
-                }`}>
-                  <span className="font-medium">
-                    {testResults[s.key].status === "ok" ? t("sessions.testOk") : t("sessions.testFail")}
-                  </span>
-                  {testResults[s.key].elapsed && (
-                    <span className="ml-2">{t("sessions.testTime")}: {(testResults[s.key].elapsed! / 1000).toFixed(1)}s</span>
-                  )}
-                  {testResults[s.key].reply && (
-                    <span className="ml-2 opacity-80">{t("sessions.testReply")}: {testResults[s.key].reply}</span>
-                  )}
-                  {testResults[s.key].error && (
-                    <span className="ml-2 opacity-80">{testResults[s.key].error}</span>
-                  )}
-                </div>
-              )}
               {/* Context usage bar */}
               {s.contextTokens > 0 && (
                 <div className="mb-2">
