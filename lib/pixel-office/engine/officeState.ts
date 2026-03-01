@@ -634,16 +634,24 @@ export class OfficeState {
     const ch = this.characters.get(agentId)
     if (!ch) return
 
-    // Work room: rows 0-9, Chat room: rows 10-10, Lounge: rows 11-16
+    // Work room (left): rows 0-9, cols 0-9 (4 PCs)
+    // Chat room (right): rows 0-9, cols 10+ (1 PC)
+    // Lounge: rows 11-16
     let targetRowMin: number
     let targetRowMax: number
+    let targetColMin: number | undefined
+    let targetColMax: number | undefined
     
     if (room === 'work') {
       targetRowMin = 0
       targetRowMax = 9
+      targetColMin = 0
+      targetColMax = 9
     } else if (room === 'chat') {
-      targetRowMin = 10
-      targetRowMax = 10
+      targetRowMin = 0
+      targetRowMax = 9
+      targetColMin = 10
+      targetColMax = 20
     } else { // lounge
       targetRowMin = 11
       targetRowMax = 16
@@ -658,7 +666,10 @@ export class OfficeState {
       const currentSeat = this.seats.get(ch.seatId)
       if (currentSeat) {
         const row = Math.round(currentSeat.seatRow)
-        if (row >= targetRowMin && row <= targetRowMax) {
+        const col = Math.round(currentSeat.seatCol)
+        const rowMatch = row >= targetRowMin && row <= targetRowMax
+        const colMatch = targetColMin === undefined || (col >= targetColMin && col <= targetColMax!)
+        if (rowMatch && colMatch) {
           // Already in the right room
           this.sendToSeat(agentId)
           return
@@ -670,7 +681,10 @@ export class OfficeState {
     for (const [seatId, seat] of this.seats) {
       if (seat.assigned) continue
       const row = Math.round(seat.seatRow)
-      if (row >= targetRowMin && row <= targetRowMax) {
+      const col = Math.round(seat.seatCol)
+      const rowMatch = row >= targetRowMin && row <= targetRowMax
+      const colMatch = targetColMin === undefined || (col >= targetColMin && col <= targetColMax!)
+      if (rowMatch && colMatch) {
         targetSeatId = seatId
         targetSeat = seat
         break
@@ -681,7 +695,10 @@ export class OfficeState {
     if (!targetSeatId) {
       for (const [seatId, seat] of this.seats) {
         const row = Math.round(seat.seatRow)
-        if (row >= targetRowMin && row <= targetRowMax) {
+        const col = Math.round(seat.seatCol)
+        const rowMatch = row >= targetRowMin && row <= targetRowMax
+        const colMatch = targetColMin === undefined || (col >= targetColMin && col <= targetColMax!)
+        if (rowMatch && colMatch) {
           targetSeatId = seatId
           targetSeat = seat
           break
