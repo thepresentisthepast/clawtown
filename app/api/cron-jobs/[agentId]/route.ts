@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
-import { exec } from "child_process";
-import { promisify } from "util";
 import path from "path";
 import fs from "fs";
-
-const execAsync = promisify(exec);
 
 const OPENCLAW_HOME = process.env.OPENCLAW_HOME || path.join(process.env.HOME || "", ".openclaw");
 
@@ -37,16 +33,15 @@ export async function GET(
   const { agentId } = await params;
 
   try {
-    // 调用 openclaw cron list --json（使用完整路径）
-    const openclawPath = process.env.OPENCLAW_BIN || "/root/.nvm/versions/node/v22.22.0/bin/openclaw";
-    const { stdout } = await execAsync(`${openclawPath} cron list --json`, {
-      cwd: OPENCLAW_HOME,
-    });
-
+    // 直接读取 cron/jobs.json 文件
+    const cronJobsPath = path.join(OPENCLAW_HOME, "cron", "jobs.json");
+    
     let data: { jobs: CronJob[] };
     try {
-      data = JSON.parse(stdout);
-    } catch {
+      const fileContent = fs.readFileSync(cronJobsPath, "utf-8");
+      data = JSON.parse(fileContent);
+    } catch (err) {
+      // 文件不存在或解析失败，返回空列表
       return NextResponse.json({
         agentId,
         agentName: agentId,

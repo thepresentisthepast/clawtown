@@ -110,3 +110,69 @@ Failed to fetch cron jobs: Error: Command failed: openclaw cron list --json
   stdout: '',
   stderr: '/bin/sh: line 1: openclaw: command not found\n'
 }
+Failed to fetch cron jobs: Error: Command failed: /root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json
+/usr/bin/node: bad option: --disable-warning=ExperimentalWarning
+
+    at ignore-listed frames {
+  code: 9,
+  killed: false,
+  signal: null,
+  cmd: '/root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json',
+  stdout: '',
+  stderr: '/usr/bin/node: bad option: --disable-warning=ExperimentalWarning\n'
+}
+Failed to fetch cron jobs: Error: Command failed: /root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json
+/usr/bin/node: bad option: --disable-warning=ExperimentalWarning
+
+    at ignore-listed frames {
+  code: 9,
+  killed: false,
+  signal: null,
+  cmd: '/root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json',
+  stdout: '',
+  stderr: '/usr/bin/node: bad option: --disable-warning=ExperimentalWarning\n'
+}
+Failed to fetch cron jobs: Error: Command failed: /root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json
+/usr/bin/node: bad option: --disable-warning=ExperimentalWarning
+
+    at ignore-listed frames {
+  code: 9,
+  killed: false,
+  signal: null,
+  cmd: '/root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json',
+  stdout: '',
+  stderr: '/usr/bin/node: bad option: --disable-warning=ExperimentalWarning\n'
+}
+Failed to fetch cron jobs: Error: Command failed: /root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json
+/usr/bin/node: bad option: --disable-warning=ExperimentalWarning
+
+    at ignore-listed frames {
+  code: 9,
+  killed: false,
+  signal: null,
+  cmd: '/root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json',
+  stdout: '',
+  stderr: '/usr/bin/node: bad option: --disable-warning=ExperimentalWarning\n'
+}
+Failed to fetch cron jobs: Error: Command failed: /root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json
+/usr/bin/node: bad option: --disable-warning=ExperimentalWarning
+
+    at ignore-listed frames {
+  code: 9,
+  killed: false,
+  signal: null,
+  cmd: '/root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json',
+  stdout: '',
+  stderr: '/usr/bin/node: bad option: --disable-warning=ExperimentalWarning\n'
+}
+Failed to fetch cron jobs: Error: Command failed: /root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json
+/usr/bin/node: bad option: --disable-warning=ExperimentalWarning
+
+    at ignore-listed frames {
+  code: 9,
+  killed: false,
+  signal: null,
+  cmd: '/root/.nvm/versions/node/v22.22.0/bin/openclaw cron list --json',
+  stdout: '',
+  stderr: '/usr/bin/node: bad option: --disable-warning=ExperimentalWarning\n'
+}
