@@ -180,7 +180,7 @@ function AgentPicker() {
 }
 
 /* ── Session Detail Panel ── */
-function SessionDetailPanel({ agentId, sessionId, onClose }: { agentId: string; sessionId: string; onClose: () => void }) {
+function SessionDetailPanel({ agentId, sessionId, sessionType, onClose }: { agentId: string; sessionId: string; sessionType?: string; onClose: () => void }) {
   const [detail, setDetail] = useState<SessionDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -263,7 +263,7 @@ function SessionDetailPanel({ agentId, sessionId, onClose }: { agentId: string; 
                   <span className={`font-medium ${
                     msg.role === "user" ? "text-[var(--accent)]" : msg.role === "assistant" ? "text-[var(--text)]" : "text-yellow-400"
                   }`}>
-                    {msg.role === "user" ? "👤 用户" : msg.role === "assistant" ? "🤖 助手" : "⚙️ 系统"}
+                    {msg.role === "user" ? "👤 用户" : msg.role === "assistant" ? (sessionType === "subagent" ? "🤖 子代理" : "🤖 助手") : "⚙️ 系统"}
                     {msg.model && <span className="ml-2 text-[var(--text-muted)] font-normal">({msg.model})</span>}
                   </span>
                   <span className="text-[var(--text-muted)] text-[10px]">{formatTime(msg.timestamp)}</span>
@@ -469,6 +469,7 @@ function SessionList({ agentId }: { agentId: string }) {
                 <SessionDetailPanel
                   agentId={agentId}
                   sessionId={s.sessionId}
+                  sessionType={s.type}
                   onClose={() => setExpandedSession(null)}
                 />
               )}
