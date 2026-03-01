@@ -251,7 +251,22 @@ function SessionDetailPanel({ agentId, sessionId, sessionType, onClose }: { agen
           <p className="text-xs text-[var(--text-muted)] text-center py-4">暂无对话记录</p>
         ) : (
           <div className="space-y-2">
-            {detail.messages.map((msg, i) => (
+            {(() => {
+              // Find the first user message index for subagent sessions
+              const firstUserMsgIndex = detail.messages.findIndex(m => m.role === "user");
+              return detail.messages.map((msg, i) => {
+                const isFirstUserMsg = sessionType === "subagent" && i === firstUserMsgIndex;
+                const getSubagentUserLabel = (msgText: string) => {
+                  if (isFirstUserMsg) return "📋 任务";
+                  if (msgText.includes("Stats: runtime") || msgText.includes("Findings:")) return "🤖 子代理";
+                  return "👤 用户";
+                };
+                const label = msg.role === "user"
+                  ? (sessionType === "subagent" ? getSubagentUserLabel(msg.text) : "👤 用户")
+                  : msg.role === "assistant"
+                    ? (sessionType === "subagent" ? "🤖 子代理" : "🤖 助手")
+                    : "⚙️ 系统";
+                return (
               <div key={i} className={`rounded-lg p-3 text-xs ${
                 msg.role === "user"
                   ? "bg-[var(--accent)]/10 border border-[var(--accent)]/20 ml-8"
@@ -263,7 +278,7 @@ function SessionDetailPanel({ agentId, sessionId, sessionType, onClose }: { agen
                   <span className={`font-medium ${
                     msg.role === "user" ? "text-[var(--accent)]" : msg.role === "assistant" ? "text-[var(--text)]" : "text-yellow-400"
                   }`}>
-                    {msg.role === "user" ? "👤 用户" : msg.role === "assistant" ? (sessionType === "subagent" ? "🤖 子代理" : "🤖 助手") : "⚙️ 系统"}
+                    {label}
                     {msg.model && <span className="ml-2 text-[var(--text-muted)] font-normal">({msg.model})</span>}
                   </span>
                   <span className="text-[var(--text-muted)] text-[10px]">{formatTime(msg.timestamp)}</span>
@@ -277,7 +292,9 @@ function SessionDetailPanel({ agentId, sessionId, sessionType, onClose }: { agen
                   </div>
                 )}
               </div>
-            ))}
+                );
+              });
+            })()}
           </div>
         )}
       </div>
