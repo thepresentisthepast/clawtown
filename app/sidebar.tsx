@@ -11,7 +11,6 @@ const NAV_ITEMS = [
   { href: "/sessions", icon: "💬", labelKey: "nav.sessions" },
   { href: "/skills", icon: "📦", labelKey: "nav.skills" },
   { href: "/cron-jobs", icon: "⏰", labelKey: "nav.cronJobs" },
-  { href: "/pixel-office", icon: "🎮", labelKey: "nav.pixelOffice" },
 ];
 
 export function Sidebar() {
