@@ -176,3 +176,28 @@ Failed to fetch cron jobs: Error: Command failed: /root/.nvm/versions/node/v22.2
   stdout: '',
   stderr: '/usr/bin/node: bad option: --disable-warning=ExperimentalWarning\n'
 }
+Error: Failed to find Server Action "x". This request might be from an older or newer deployment.
+Read more: https://nextjs.org/docs/messages/failed-to-find-server-action
+    at ignore-listed frames
+Error: Failed to find Server Action "x". This request might be from an older or newer deployment.
+Read more: https://nextjs.org/docs/messages/failed-to-find-server-action
+    at ignore-listed frames
+Error: spawn openclaw ENOENT
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'spawn openclaw',
+  path: 'openclaw',
+  spawnargs: [Array]
+}
+⨯ uncaughtException:  Error: spawn openclaw ENOENT
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'spawn openclaw',
+  path: 'openclaw',
+  spawnargs: [Array]
+}
+Error: Failed to find Server Action "x". This request might be from an older or newer deployment.
+Read more: https://nextjs.org/docs/messages/failed-to-find-server-action
+    at ignore-listed frames
